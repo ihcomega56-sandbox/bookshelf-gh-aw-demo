@@ -1,0 +1,29 @@
+# 通常の CI ワークフロー。
+# Agentic Workflow の "CI Doctor" はこのワークフローの失敗を検知して原因調査を行う。
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: JDK 21 をセットアップ
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Gradle をセットアップ
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: ビルドとテスト
+        run: ./gradlew build --no-daemon

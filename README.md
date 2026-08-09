@@ -61,16 +61,11 @@ curl -X POST http://localhost:8080/api/loans/books/1 \
 
 ### 意図的に残してある「改善余地」
 
-AW に見つけてもらう／直してもらうための題材です。
+AW に見つけてもらう／直してもらうための題材を、あえて残してあります。
+**具体的な内容は答えにあたるため、[`docs/intentional-issues.md`](docs/intentional-issues.md) に切り出しています。**
 
-| 種別 | 箇所 | 内容 |
-| --- | --- | --- |
-| 機能追加 TODO | `BookshelfService#borrow` | 在庫切れ時の予約（順番待ち）機能が未実装 |
-| 機能追加 TODO | `BookshelfService` 末尾 | 延滞者へのリマインド通知が未実装 |
-| 機能追加 TODO | `BookRepository` | 検索がページング未対応でレスポンスが肥大化しうる |
-| リファクタリング | `BookshelfService#borrow` | 貸出可否の判定が 1 メソッドに集中し、上限 5 冊・期限 14 日がマジックナンバー |
-| セキュリティ | `BorrowRequest` | 認証がなく、借用者をクライアントの申告値のまま保存している |
-| テスト不足 | `BookshelfServiceTest` | 貸出上限・延滞チェックのテストが未整備 |
+エージェントに「知識なしで」調査させるデモを行う場合は、このファイルを先に読ませないでください。
+除外の方法と、その限界については同ファイル末尾を参照してください。
 
 ---
 
@@ -233,6 +228,8 @@ gh label create automation  --color 5319e7 --description "Agentic Workflow に�
 │   └── security-review.md / .lock.yml
 ├── build.gradle
 ├── settings.gradle
+├── docs/
+│   └── intentional-issues.md     # デモの答え（エージェントに読ませない想定）
 └── src/
     ├── main/java/com/example/bookshelf/
     ├── main/resources/           # application.yml / data.sql

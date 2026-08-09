@@ -193,15 +193,29 @@ gh aw audit <run-id>               # 特定実行のツール使用状況・コ�
 
 Issue や PR のコメントに `/add-tests` と書くと `test-gap-filler` が起動します。
 
-### 3.6 リポジトリ側の設定（GitHub の画面での作業）
+### 3.6 ラベルの作成
 
-以下は CLI だけでは完結しないため、人が実施する必要があります。作業内容は Issue に切り出しています。
+ワークフローが付与・使用するラベルは、あらかじめリポジトリに存在している必要があります。
+既定のラベルに加えて、以下を `gh` で作成しています。
 
-1. Settings → Actions → General → **Workflow permissions** で
-   「Allow GitHub Actions to create and approve pull requests」を有効化する。
-2. ワークフローが使うラベル（`bug` / `enhancement` / `question` / `documentation` /
-   `refactoring` / `security` / `ci` / `test` / `automation` / `report`）を作成する。
-3. `COPILOT_GITHUB_TOKEN` などエンジン用シークレットを登録する。
+```bash
+gh label create refactoring --color fbca04 --description "挙動を変えない内部構造の改善"
+gh label create security    --color b60205 --description "セキュリティに関する内容"
+gh label create ci          --color 1d76db --description "CI / ビルドに関する内容"
+gh label create test        --color 0e8a16 --description "テストに関する内容"
+gh label create automation  --color 5319e7 --description "Agentic Workflow による自動作成"
+```
+
+### 3.7 人間がやるべきタスク（Issue に切り出し済み）
+
+以下は CLI やエージェントだけでは完結せず、人間の権限・判断が必要です。Issue として起票してあります。
+
+| Issue | 内容 | なぜ人間が必要か |
+| --- | --- | --- |
+| [#2](../../issues/2) | エンジン用シークレット `COPILOT_GITHUB_TOKEN` の登録 | PAT の発行とシークレット登録は権限保有者にしかできない |
+| [#3](../../issues/3) | Actions が PR を作成できるようリポジトリ設定を変更 | Settings の変更は管理者権限が必要 |
+| [#4](../../issues/4) | `.lock.yml` の再コンパイル漏れを検知する仕組みの整備 | CI コストとの兼ね合いで運用方針の判断が必要 |
+| [#5](../../issues/5) | 5 つのワークフローの初回実行と出力・コストの確認 | 出力品質と実行コストの許容判断は人間が行う |
 
 ---
 

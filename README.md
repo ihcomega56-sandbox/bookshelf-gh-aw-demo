@@ -62,10 +62,9 @@ curl -X POST http://localhost:8080/api/loans/books/1 \
 ### 意図的に残してある「改善余地」
 
 AW に見つけてもらう／直してもらうための題材を、あえて残してあります。
-**具体的な内容は答えにあたるため、[`docs/intentional-issues.md`](docs/intentional-issues.md) に切り出しています。**
+**具体的な内容は答えにあたるため、このリポジトリの外（非公開の Gist）で管理しています。**
 
-エージェントに「知識なしで」調査させるデモを行う場合は、このファイルを先に読ませないでください。
-除外の方法と、その限界については同ファイル末尾を参照してください。
+エージェントに「知識なしで」調査させるデモを行うため、答えはリポジトリの作業ツリーに置きません。
 
 ---
 
@@ -228,8 +227,6 @@ gh label create automation  --color 5319e7 --description "Agentic Workflow に�
 │   └── security-review.md / .lock.yml
 ├── build.gradle
 ├── settings.gradle
-├── docs/
-│   └── intentional-issues.md     # デモの答え（エージェントに読ませない想定）
 └── src/
     ├── main/java/com/example/bookshelf/
     ├── main/resources/           # application.yml / data.sql

@@ -110,7 +110,7 @@ AW に見つけてもらう／直してもらうための題材です。
 # gh CLI の拡張として導入
 gh extension install github/gh-aw
 
-# もしくはインストーラスクリプト（GitHub トークン不要）
+# もしくはインストールスクリプト（GitHub トークン不要）
 curl -sL https://raw.githubusercontent.com/github/gh-aw/main/install-gh-aw.sh | bash
 
 gh aw version

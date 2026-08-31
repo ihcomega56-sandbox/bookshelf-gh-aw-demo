@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
  * 蔵書と貸出に関するユースケースをまとめたサービス。
  *
  * <p>注意: このクラスは意図的に「リファクタリングの余地がある状態」で置いてある。
- * 貸出・返却・延滞の判定ロジックが 1 クラスに同居しており、貸出可否の条件もマジックナンバーで
- * 直書きされている。Agentic Workflow によるリファクタリング提案のデモ対象。</p>
+ * 貸出・返却・延滞の判定ロジックが 1 クラスに同居している。Agentic Workflow による
+ * リファクタリング提案のデモ対象。</p>
  */
 @Service
 @Transactional
@@ -79,17 +79,17 @@ public class BookshelfService {
         if (borrowerLoans.size() >= MAX_BORROW_COUNT_PER_BORROWER) {
             throw new BookshelfException("貸出上限（" + MAX_BORROW_COUNT_PER_BORROWER + " 冊）に達しています: " + borrower);
         }
+        LocalDate today = LocalDate.now();
         for (Loan loan : borrowerLoans) {
             if (loan.getBookId().equals(bookId)) {
                 throw new BookshelfException("同じ蔵書を重複して借りることはできません: " + book.getTitle());
             }
             // 延滞している本がある場合は新規貸出を認めない
-            if (loan.getDueOn().isBefore(LocalDate.now())) {
+            if (loan.getDueOn().isBefore(today)) {
                 throw new BookshelfException("延滞中の蔵書があるため貸し出せません: " + borrower);
             }
         }
 
-        LocalDate today = LocalDate.now();
         return loanRepository.save(new Loan(bookId, borrower, today, today.plusDays(LOAN_PERIOD_DAYS)));
     }
 

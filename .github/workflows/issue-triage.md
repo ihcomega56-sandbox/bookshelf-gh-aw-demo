@@ -6,7 +6,6 @@ description: |
 on:
   issues:
     types: [opened, reopened]
-    roles: all
   reaction: eyes
 
 permissions: read-all

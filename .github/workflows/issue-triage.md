@@ -18,7 +18,7 @@ tools:
 
 safe-outputs:
   add-labels:
-    allowed: [bug, enhancement, question, documentation, refactoring, security, good first issue]
+    allowed: [bug, enhancement, question, documentation, refactoring, security, good first issue, agent-fix]
     max: 3
   add-comment:
     max: 1
@@ -44,6 +44,14 @@ timeout-minutes: 10
    - `documentation`: README や Javadoc の改善
    - `question`: 使い方の質問
    - `good first issue`: 影響範囲が小さく初参加者でも着手しやすい
+   - `agent-fix`: 次のすべてを満たし、自動修正を任せてよい
+     - テストまたは静的解析で修正の正しさを検証できる
+     - 要求仕様が明確で、設計判断をほぼ必要としない
+     - 既存の振る舞いを変更しない、または変更内容が明確である
+     - ドキュメント・テスト・Lint・型エラーの修正、未使用コード・import の削除、
+       コメント・命名・可読性の改善、マジックナンバーの定数化、軽微な重複コードの共通化、
+       または明確で小規模なバグ修正に該当する
+     - 上記のいずれかを満たさない、再現性がない、影響範囲が大きい場合は付与しない
 5. 日本語でコメントを 1 件投稿する。
 
 ## コメントに含める内容

@@ -12,10 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 蔵書と貸出に関するユースケースをまとめたサービス。
- *
- * <p>注意: このクラスは意図的に「リファクタリングの余地がある状態」で置いてある。
- * 貸出・返却・延滞の判定ロジックが 1 クラスに同居している。Agentic Workflow による
- * リファクタリング提案のデモ対象。</p>
  */
 @Service
 @Transactional

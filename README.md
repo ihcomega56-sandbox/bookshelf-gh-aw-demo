@@ -79,7 +79,7 @@ AW に見つけてもらう／直してもらうための題材を、あえて�
 | [`tech-debt-hunter.md`](.github/workflows/tech-debt-hunter.md) | 週次 / 手動 | TODO とリファクタリング候補を棚卸しして優先度付け | `create-issue` |
 | [`test-gap-filler.md`](.github/workflows/test-gap-filler.md) | Issue/PR への `/add-tests` コメント | 不足しているテストを追加した PR を作成 | `create-pull-request` / `add-comment` |
 | [`security-review.md`](.github/workflows/security-review.md) | 週次 / 手動 | 依存の脆弱性とコード上の懸念を調査 | `create-issue` |
-| [`issue-auto-fix.md`](.github/workflows/issue-auto-fix.md) | `Issue トリアージ` 完了後、Issue に `refactoring`/`documentation`/`bug` ラベルあり | 内容を読んで最小修正を行いドラフト PR を作成 | `create-pull-request` / `add-comment` |
+| [`issue-auto-fix.md`](.github/workflows/issue-auto-fix.md) | `Issue トリアージ` 完了後、Issue に `agent-fix` ラベルあり | 内容を読んで最小修正を行いドラフト PR を作成 | `create-pull-request` / `add-comment` |
 
 ### なぜ AW が向いているのか
 
@@ -200,6 +200,7 @@ gh label create security    --color b60205 --description "セキュリティに�
 gh label create ci          --color 1d76db --description "CI / ビルドに関する内容"
 gh label create test        --color 0e8a16 --description "テストに関する内容"
 gh label create automation  --color 5319e7 --description "Agentic Workflow による自動作成"
+gh label create agent-fix   --color 0e8a16 --description "検証可能で明確な小規模修正として自動修正を許可"
 ```
 
 ### 3.7 人間がやるべきタスク（Issue に切り出し済み）

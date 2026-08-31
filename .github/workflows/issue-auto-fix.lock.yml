@@ -24,7 +24,7 @@
 # For more information: https://github.github.com/gh-aw/introduction/overview/
 #
 # `Issue トリアージ` ワークフロー完了後、対象 Issue の現在ラベルを確認し、
-# `refactoring` / `documentation` / `bug` のいずれかが付いている場合のみ
+# `agent-fix` ラベルが付いている場合のみ
 # 内容を読んで最小限の修正を行い、ドラフトのプルリクエストを作成するワークフロー。
 #
 # Secrets used:
@@ -1366,7 +1366,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           WORKFLOW_NAME: "Issue 自動修正エージェント"
-          WORKFLOW_DESCRIPTION: "`Issue トリアージ` ワークフロー完了後、対象 Issue の現在ラベルを確認し、\n`refactoring` / `documentation` / `bug` のいずれかが付いている場合のみ\n内容を読んで最小限の修正を行い、ドラフトのプルリクエストを作成するワークフロー。"
+          WORKFLOW_DESCRIPTION: "`Issue トリアージ` ワークフロー完了後、対象 Issue の現在ラベルを確認し、\n`agent-fix` ラベルが付いている場合のみ\n内容を読んで最小限の修正を行い、ドラフトのプルリクエストを作成するワークフロー。"
           HAS_PATCH: ${{ needs.agent.outputs.has_patch }}
           GH_AW_DETECTION_CONTINUE_ON_ERROR: "true"
         with:

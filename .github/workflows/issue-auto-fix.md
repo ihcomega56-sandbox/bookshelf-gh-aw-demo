@@ -14,6 +14,9 @@ if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
 permissions: read-all
 
+concurrency:
+  group: gh-aw-${{ github.workflow }}-${{ github.event.workflow_run.id }}
+
 network:
   allowed:
     - defaults

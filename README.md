@@ -70,7 +70,7 @@ AW に見つけてもらう／直してもらうための題材を、あえて�
 
 ## 2. AW の使い所
 
-このリポジトリには 5 つの Agentic Workflow があります。実体は `.github/workflows/*.md`（人が書く指示）と、そこからコンパイルされた `*.lock.yml`（GitHub Actions ワークフロー）のペアです。
+このリポジトリには 6 つの Agentic Workflow があります。実体は `.github/workflows/*.md`（人が書く指示）と、そこからコンパイルされた `*.lock.yml`（GitHub Actions ワークフロー）のペアです。
 
 | ワークフロー | トリガー | やること | 出力 (safe-outputs) |
 | --- | --- | --- | --- |
@@ -79,6 +79,7 @@ AW に見つけてもらう／直してもらうための題材を、あえて�
 | [`tech-debt-hunter.md`](.github/workflows/tech-debt-hunter.md) | 週次 / 手動 | TODO とリファクタリング候補を棚卸しして優先度付け | `create-issue` |
 | [`test-gap-filler.md`](.github/workflows/test-gap-filler.md) | Issue/PR への `/add-tests` コメント | 不足しているテストを追加した PR を作成 | `create-pull-request` / `add-comment` |
 | [`security-review.md`](.github/workflows/security-review.md) | 週次 / 手動 | 依存の脆弱性とコード上の懸念を調査 | `create-issue` |
+| [`issue-auto-fix.md`](.github/workflows/issue-auto-fix.md) | Issue に `refactoring`/`documentation`/`bug` ラベル付与 | 内容を読んで最小修正を行いドラフト PR を作成 | `create-pull-request` / `add-comment` |
 
 ### なぜ AW が向いているのか
 
@@ -219,12 +220,13 @@ gh label create automation  --color 5319e7 --description "Agentic Workflow に�
 .
 ├── .github/workflows/
 │   ├── ci.yml                    # 通常の CI (Gradle build)
-│   ├── issue-triage.md           # ここから 5 つが Agentic Workflow
+│   ├── issue-triage.md           # ここから 6 つが Agentic Workflow
 │   ├── issue-triage.lock.yml     # ← gh aw compile による生成物
 │   ├── ci-doctor.md / .lock.yml
 │   ├── tech-debt-hunter.md / .lock.yml
 │   ├── test-gap-filler.md / .lock.yml
-│   └── security-review.md / .lock.yml
+│   ├── security-review.md / .lock.yml
+│   └── issue-auto-fix.md / .lock.yml
 ├── build.gradle
 ├── settings.gradle
 └── src/

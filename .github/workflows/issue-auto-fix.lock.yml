@@ -57,8 +57,6 @@ name: "Issue 自動修正エージェント"
 on:
   issues:
     types:
-      - opened
-      - reopened
       - labeled
 
 permissions: {}

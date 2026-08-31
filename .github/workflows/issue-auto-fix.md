@@ -6,7 +6,7 @@ description: |
 
 on:
   issues:
-    types: [opened, reopened, labeled]
+    types: [labeled]
   reaction: eyes
 
 if: ${{ contains(github.event.issue.labels.*.name, 'refactoring') || contains(github.event.issue.labels.*.name, 'documentation') || contains(github.event.issue.labels.*.name, 'bug') }}

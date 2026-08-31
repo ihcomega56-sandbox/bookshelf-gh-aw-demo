@@ -7,13 +7,17 @@ on:
   schedule: weekly
   workflow_dispatch:
 
-permissions: read-all
+permissions:
+  copilot-requests: write
+  contents: read
+  issues: read
+  pull-requests: read
 
 network: defaults
 
 tools:
   github:
-    toolsets: [issues, repos]
+    toolsets: [repos, issues, pull_requests]
   bash: true
 
 safe-outputs:

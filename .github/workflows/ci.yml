@@ -27,3 +27,17 @@ jobs:
 
       - name: ビルドとテスト
         run: ./gradlew build --no-daemon
+
+  verify-agentic-workflows:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: gh-aw をインストール
+        run: gh extension install github/gh-aw --pin v0.86.2
+
+      - name: 生成済みワークフローを検証
+        run: |
+          gh aw compile
+          git diff --exit-code -- .github/workflows/*.lock.yml

@@ -16,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 貸出・返却のユースケースに対するテスト。
- *
- * <p>注意: 貸出上限（5 冊）や延滞チェックのテストは意図的に未整備にしてある
- * （Agentic Workflow によるテスト追加提案のデモ対象）。</p>
  */
 @SpringBootTest
 @Transactional
@@ -79,5 +76,45 @@ class BookshelfServiceTest {
         assertThatThrownBy(() -> bookshelfService.borrow(manyCopies.getId(), "alice"))
                 .isInstanceOf(BookshelfException.class)
                 .hasMessageContaining("重複");
+    }
+
+    @Test
+    void 貸出上限の5冊までは借りられる() {
+        Book manyCopies = bookRepository.save(new Book("Effective Java", "Joshua Bloch", "9784621303252", 10));
+        for (int i = 0; i < 5; i++) {
+            Book copy = bookRepository.save(new Book("本" + i, "著者" + i, "isbn-" + i, 1));
+            Loan loan = bookshelfService.borrow(copy.getId(), "alice");
+            assertThat(loan).isNotNull();
+        }
+
+        assertThat(bookshelfService.borrow(manyCopies.getId(), "bob")).isNotNull();
+    }
+
+    @Test
+    void 貸出上限の5冊を超えて6冊目は借りられない() {
+        for (int i = 0; i < 5; i++) {
+            Book copy = bookRepository.save(new Book("本" + i, "著者" + i, "isbn-" + i, 1));
+            bookshelfService.borrow(copy.getId(), "alice");
+        }
+        Book sixthBook = bookRepository.save(new Book("6冊目", "著者6", "isbn-6", 1));
+
+        assertThatThrownBy(() -> bookshelfService.borrow(sixthBook.getId(), "alice"))
+                .isInstanceOf(BookshelfException.class)
+                .hasMessageContaining("貸出上限");
+    }
+
+    @Test
+    void 延滞中の蔵書がある借り手は新規貸出できない() {
+        Loan overdueLoan = bookshelfService.borrow(book.getId(), "alice");
+        // 貸出日・期限日を過去日に強制的に書き換え、延滞状態を再現する
+        Loan reloaded = loanRepository.findById(overdueLoan.getId()).orElseThrow();
+        reloaded.forceSetDueOn(LocalDate.now().minusDays(1));
+        loanRepository.save(reloaded);
+
+        Book anotherBook = bookRepository.save(new Book("別の本", "別の著者", "9784000000001", 1));
+
+        assertThatThrownBy(() -> bookshelfService.borrow(anotherBook.getId(), "alice"))
+                .isInstanceOf(BookshelfException.class)
+                .hasMessageContaining("延滞中");
     }
 }

@@ -76,4 +76,11 @@ public class Loan {
     public void markReturned(LocalDate returnedOn) {
         this.returnedOn = returnedOn;
     }
+
+    /**
+     * 返却期限日を強制的に上書きする。延滞状態のテストデータを作成する用途を想定している。
+     */
+    public void forceSetDueOn(LocalDate dueOn) {
+        this.dueOn = dueOn;
+    }
 }

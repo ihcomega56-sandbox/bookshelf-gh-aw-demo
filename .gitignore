@@ -1,3 +1,6 @@
+# GitHub Actions logs
+.github/aw/logs
+
 # Gradle
 .gradle/
 build/

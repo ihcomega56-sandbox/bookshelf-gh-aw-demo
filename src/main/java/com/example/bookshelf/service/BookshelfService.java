@@ -99,6 +99,19 @@ public class BookshelfService {
         return loanRepository.save(loan);
     }
 
+    public Loan renew(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new NoSuchElementException("貸出記録が見つかりません: id=" + loanId));
+        if (loan.isReturned()) {
+            throw new BookshelfException("既に返却済みです: id=" + loanId);
+        }
+        if (loan.getDueOn().isBefore(LocalDate.now())) {
+            throw new BookshelfException("延滞中の貸出は更新できません: id=" + loanId);
+        }
+        loan.renew(LOAN_PERIOD_DAYS);
+        return loanRepository.save(loan);
+    }
+
     @Transactional(readOnly = true)
     public List<Loan> findOverdueLoans() {
         LocalDate today = LocalDate.now();

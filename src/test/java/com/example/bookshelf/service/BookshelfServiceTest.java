@@ -8,6 +8,7 @@ import com.example.bookshelf.domain.Loan;
 import com.example.bookshelf.repository.BookRepository;
 import com.example.bookshelf.repository.LoanRepository;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,46 @@ class BookshelfServiceTest {
         assertThatThrownBy(() -> bookshelfService.borrow(manyCopies.getId(), "alice"))
                 .isInstanceOf(BookshelfException.class)
                 .hasMessageContaining("重複");
+    }
+
+    @Test
+    void 貸出期限を二回更新できる() {
+        Loan loan = bookshelfService.borrow(book.getId(), "alice");
+        LocalDate originalDueOn = loan.getDueOn();
+
+        Loan firstRenewal = bookshelfService.renew(loan.getId());
+        assertThat(firstRenewal.getDueOn()).isEqualTo(originalDueOn.plusDays(14));
+        assertThat(firstRenewal.getRenewalCount()).isEqualTo(1);
+
+        Loan secondRenewal = bookshelfService.renew(loan.getId());
+        assertThat(secondRenewal.getDueOn()).isEqualTo(originalDueOn.plusDays(28));
+        assertThat(secondRenewal.getRenewalCount()).isEqualTo(2);
+    }
+
+    @Test
+    void 返却済みの貸出は更新できない() {
+        Loan loan = bookshelfService.borrow(book.getId(), "alice");
+        bookshelfService.giveBack(loan.getId());
+
+        assertThatThrownBy(() -> bookshelfService.renew(loan.getId()))
+                .isInstanceOf(BookshelfException.class)
+                .hasMessageContaining("返却済み");
+    }
+
+    @Test
+    void 延滞中の貸出は更新できない() {
+        Loan overdue = loanRepository.save(new Loan(book.getId(), "alice",
+                LocalDate.now().minusDays(15), LocalDate.now().minusDays(1)));
+
+        assertThatThrownBy(() -> bookshelfService.renew(overdue.getId()))
+                .isInstanceOf(BookshelfException.class)
+                .hasMessageContaining("延滞中");
+    }
+
+    @Test
+    void 存在しない貸出は更新できない() {
+        assertThatThrownBy(() -> bookshelfService.renew(Long.MAX_VALUE))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("貸出記録が見つかりません");
     }
 }

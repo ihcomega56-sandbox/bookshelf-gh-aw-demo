@@ -40,7 +40,11 @@ src/main/java/com/example/bookshelf/
 | `POST` | `/api/books` | 蔵書の登録 |
 | `POST` | `/api/loans/books/{bookId}` | 貸出 |
 | `POST` | `/api/loans/{loanId}/return` | 返却 |
+| `POST` | `/api/loans/{loanId}/renew` | 貸出期限の更新 |
 | `GET` | `/api/loans/overdue` | 延滞中の貸出一覧 |
+
+貸出期限の更新では、現在の返却期限から14日延長します。更新は1件の貸出につき最大2回までです。
+返却済みまたは延滞中の貸出は更新できません。
 
 ### 起動・ビルド
 
@@ -55,6 +59,7 @@ src/main/java/com/example/bookshelf/
 curl http://localhost:8080/api/books
 curl -X POST http://localhost:8080/api/loans/books/1 \
   -H 'Content-Type: application/json' -d '{"borrower":"alice"}'
+curl -X POST http://localhost:8080/api/loans/1/renew
 ```
 
 > Java 21 が必要です。Gradle の toolchain 設定を使用しているため、JDK 21 が見つからない場合はビルド時にエラーになります。

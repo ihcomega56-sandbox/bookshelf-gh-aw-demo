@@ -7,10 +7,10 @@ import java.time.LocalDate;
  * 貸出レスポンス。
  */
 public record LoanResponse(Long id, Long bookId, String borrower, LocalDate borrowedOn, LocalDate dueOn,
-        LocalDate returnedOn) {
+    LocalDate returnedOn, int renewalCount) {
 
     public static LoanResponse from(Loan loan) {
         return new LoanResponse(loan.getId(), loan.getBookId(), loan.getBorrower(), loan.getBorrowedOn(),
-                loan.getDueOn(), loan.getReturnedOn());
+        loan.getDueOn(), loan.getReturnedOn(), loan.getRenewalCount());
     }
 }

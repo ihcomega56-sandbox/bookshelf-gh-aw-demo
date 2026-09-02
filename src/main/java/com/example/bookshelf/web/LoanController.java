@@ -35,6 +35,11 @@ public class LoanController {
         return LoanResponse.from(bookshelfService.giveBack(loanId));
     }
 
+    @PostMapping("/{loanId}/renew")
+    public LoanResponse renew(@PathVariable("loanId") Long loanId) {
+        return LoanResponse.from(bookshelfService.renew(loanId));
+    }
+
     @GetMapping("/overdue")
     public List<LoanResponse> overdue() {
         return bookshelfService.findOverdueLoans().stream()

@@ -32,6 +32,9 @@ public class Loan {
     @Column(nullable = false)
     private LocalDate dueOn;
 
+    @Column(nullable = false)
+    private int renewalCount;
+
     private LocalDate returnedOn;
 
     protected Loan() {
@@ -65,6 +68,10 @@ public class Loan {
         return dueOn;
     }
 
+    public int getRenewalCount() {
+        return renewalCount;
+    }
+
     public LocalDate getReturnedOn() {
         return returnedOn;
     }
@@ -75,5 +82,10 @@ public class Loan {
 
     public void markReturned(LocalDate returnedOn) {
         this.returnedOn = returnedOn;
+    }
+
+    public void renew(int extensionDays) {
+        dueOn = dueOn.plusDays(extensionDays);
+        renewalCount++;
     }
 }

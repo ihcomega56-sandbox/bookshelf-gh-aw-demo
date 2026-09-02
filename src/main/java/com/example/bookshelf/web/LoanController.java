@@ -1,10 +1,17 @@
 package com.example.bookshelf.web;
 
+import com.example.bookshelf.domain.Book;
+import com.example.bookshelf.domain.Loan;
 import com.example.bookshelf.service.BookshelfService;
 import com.example.bookshelf.web.dto.BorrowRequest;
 import com.example.bookshelf.web.dto.LoanResponse;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,5 +52,75 @@ public class LoanController {
         return bookshelfService.findOverdueLoans().stream()
                 .map(LoanResponse::from)
                 .toList();
+    }
+
+    @GetMapping("/overdue/reminder-preview")
+    public List<Map<String, Object>> reminderPreview() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        List<Loan> loans = bookshelfService.findOverdueLoans();
+        List<Book> books = bookshelfService.findAllBooks();
+        LocalDate now = LocalDate.now();
+
+        for (int i = 0; i < loans.size(); i++) {
+            Loan loan = loans.get(i);
+            String title = "不明な蔵書";
+            for (int j = 0; j < books.size(); j++) {
+                if (books.get(j).getId().equals(loan.getBookId())) {
+                    title = books.get(j).getTitle();
+                }
+            }
+
+            long days = ChronoUnit.DAYS.between(loan.getDueOn(), now);
+            String level = "LOW";
+            if (days > 0) {
+                if (days >= 7) {
+                    level = "MEDIUM";
+                    if (days >= 30) {
+                        level = "HIGH";
+                    }
+                } else if (days == 1) {
+                    level = "LOW";
+                } else {
+                    level = "LOW";
+                }
+            }
+
+            String message;
+            if (level.equals("HIGH")) {
+                message = "【至急】" + loan.getBorrower() + " さん、『" + title + "』は " + days
+                        + " 日延滞しています。すぐに返却してください。";
+            } else {
+                if (level.equals("MEDIUM")) {
+                    message = loan.getBorrower() + " さん、『" + title + "』の返却期限を " + days
+                            + " 日過ぎています。";
+                } else {
+                    message = loan.getBorrower() + " さん、『" + title + "』を返却してください。";
+                }
+            }
+
+            Map<String, Object> row = new HashMap<>();
+            row.put("loanId", loan.getId());
+            row.put("borrower", loan.getBorrower());
+            row.put("bookId", loan.getBookId());
+            row.put("bookTitle", title);
+            row.put("overdueDays", days);
+            row.put("priority", level);
+            row.put("message", message);
+            row.put("sendEmail", days >= 3 ? true : false);
+            row.put("sendChat", level.equals("HIGH") ? true : level.equals("MEDIUM") ? true : false);
+            result.add(row);
+        }
+
+        for (int i = 0; i < result.size(); i++) {
+            for (int j = i + 1; j < result.size(); j++) {
+                if (((Number) result.get(i).get("overdueDays")).longValue()
+                        < ((Number) result.get(j).get("overdueDays")).longValue()) {
+                    Map<String, Object> temporary = result.get(i);
+                    result.set(i, result.get(j));
+                    result.set(j, temporary);
+                }
+            }
+        }
+        return result;
     }
 }
